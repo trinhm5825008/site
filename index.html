@@ -3,694 +3,191 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lưu Thúy An Trinh - Giáo viên Toán</title>
-    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&family=Pacifico&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Quicksand', sans-serif;
-            background: linear-gradient(135deg, #ffeef8 0%, #e0f7ff 100%);
-            color: #5a5a5a;
-            overflow-x: hidden;
-        }
-
-        /* Floating hearts animation */
-        .floating-hearts {
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 1;
-            overflow: hidden;
-        }
-
-        .heart {
-            position: absolute;
-            color: #ffb3d9;
-            opacity: 0.3;
-            animation: float 15s infinite;
-        }
-
-        @keyframes float {
-            0% {
-                transform: translateY(100vh) rotate(0deg);
-                opacity: 0;
-            }
-            10% {
-                opacity: 0.3;
-            }
-            90% {
-                opacity: 0.3;
-            }
-            100% {
-                transform: translateY(-100vh) rotate(360deg);
-                opacity: 0;
-            }
-        }
-
-        /* Header/Navbar */
-        nav {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 1rem 2rem;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            box-shadow: 0 4px 20px rgba(255, 182, 193, 0.3);
-        }
-
-        nav ul {
-            list-style: none;
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            flex-wrap: wrap;
-        }
-
-        nav a {
-            text-decoration: none;
-            color: #ff6b9d;
-            font-weight: 600;
-            font-size: 1.1rem;
-            transition: all 0.3s ease;
-            position: relative;
-        }
-
-        nav a:hover {
-            color: #ff1493;
-            transform: translateY(-2px);
-        }
-
-        nav a::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 0;
-            height: 3px;
-            background: linear-gradient(90deg, #ff6b9d, #c471ed);
-            transition: width 0.3s ease;
-        }
-
-        nav a:hover::after {
-            width: 100%;
-        }
-
-        /* Hero Section */
-        .hero {
-            text-align: center;
-            padding: 4rem 2rem;
-            position: relative;
-            z-index: 2;
-        }
-
-        .profile-container {
-            position: relative;
-            display: inline-block;
-            margin-bottom: 2rem;
-        }
-
-        .profile-img {
-            width: 200px;
-            height: 200px;
-            border-radius: 50%;
-            border: 6px solid #fff;
-            box-shadow: 0 10px 40px rgba(255, 105, 180, 0.4);
-            background: linear-gradient(135deg, #ffc3e1, #c9e7ff);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 5rem;
-            animation: bounce 2s infinite;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .profile-img::before {
-            content: '👩‍🏫';
-            position: absolute;
-        }
-
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-
-        .sparkle {
-            position: absolute;
-            font-size: 1.5rem;
-            animation: sparkle 1.5s infinite;
-        }
-
-        .sparkle:nth-child(1) { top: 10%; left: 10%; animation-delay: 0s; }
-        .sparkle:nth-child(2) { top: 20%; right: 15%; animation-delay: 0.3s; }
-        .sparkle:nth-child(3) { bottom: 15%; left: 15%; animation-delay: 0.6s; }
-        .sparkle:nth-child(4) { bottom: 10%; right: 10%; animation-delay: 0.9s; }
-
-        @keyframes sparkle {
-            0%, 100% { opacity: 0; transform: scale(0.5) rotate(0deg); }
-            50% { opacity: 1; transform: scale(1) rotate(180deg); }
-        }
-
-        h1 {
-            font-family: 'Pacifico', cursive;
-            font-size: 3rem;
-            background: linear-gradient(135deg, #ff6b9d, #c471ed, #4facfe);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 1rem;
-            animation: fadeInDown 1s ease;
-        }
-
-        .subtitle {
-            font-size: 1.3rem;
-            color: #ff6b9d;
-            margin-bottom: 2rem;
-            animation: fadeInUp 1s ease;
-        }
-
-        @keyframes fadeInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Info Cards */
-        .info-section {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 3rem 2rem;
-            position: relative;
-            z-index: 2;
-        }
-
-        .section-title {
-            text-align: center;
-            font-size: 2.5rem;
-            color: #ff6b9d;
-            margin-bottom: 3rem;
-            position: relative;
-            display: inline-block;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-
-        .section-title::before,
-        .section-title::after {
-            content: '✨';
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-        }
-
-        .section-title::before {
-            left: -50px;
-        }
-
-        .section-title::after {
-            right: -50px;
-        }
-
-        .info-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
-            margin-bottom: 3rem;
-        }
-
-        .info-card {
-            background: rgba(255, 255, 255, 0.9);
-            padding: 2rem;
-            border-radius: 20px;
-            box-shadow: 0 8px 30px rgba(255, 105, 180, 0.2);
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .info-card::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(135deg, rgba(255, 182, 193, 0.1), rgba(173, 216, 230, 0.1));
-            transform: rotate(45deg);
-            transition: all 0.5s ease;
-        }
-
-        .info-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 50px rgba(255, 105, 180, 0.4);
-        }
-
-        .info-card:hover::before {
-            top: -100%;
-            right: -100%;
-        }
-
-        .info-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            display: block;
-        }
-
-        .info-label {
-            font-weight: 600;
-            color: #ff6b9d;
-            margin-bottom: 0.5rem;
-            font-size: 1.1rem;
-        }
-
-        .info-value {
-            color: #5a5a5a;
-            font-size: 1.1rem;
-        }
-
-        /* About Section */
-        .about-content {
-            background: rgba(255, 255, 255, 0.9);
-            padding: 3rem;
-            border-radius: 30px;
-            box-shadow: 0 10px 40px rgba(255, 105, 180, 0.2);
-            margin-bottom: 3rem;
-            line-height: 1.8;
-            font-size: 1.1rem;
-        }
-
-        /* Hobbies Section */
-        .hobbies-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .hobby-card {
-            background: linear-gradient(135deg, #fff5f7, #e0f4ff);
-            padding: 2rem;
-            border-radius: 20px;
-            text-align: center;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            box-shadow: 0 5px 20px rgba(255, 105, 180, 0.15);
-        }
-
-        .hobby-card:hover {
-            transform: scale(1.05) rotate(2deg);
-            box-shadow: 0 10px 30px rgba(255, 105, 180, 0.3);
-        }
-
-        .hobby-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-        }
-
-        .hobby-name {
-            font-weight: 600;
-            color: #ff6b9d;
-            font-size: 1.2rem;
-        }
-
-        /* Gallery Section */
-        .gallery-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .gallery-item {
-            aspect-ratio: 1;
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 8px 25px rgba(255, 105, 180, 0.2);
-            transition: all 0.3s ease;
-            background: linear-gradient(135deg, #ffd6e8, #c9e7ff);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 4rem;
-            cursor: pointer;
-        }
-
-        .gallery-item:hover {
-            transform: scale(1.05);
-            box-shadow: 0 12px 40px rgba(255, 105, 180, 0.4);
-        }
-
-        /* Contact Section */
-        .contact-container {
-            background: rgba(255, 255, 255, 0.9);
-            padding: 3rem;
-            border-radius: 30px;
-            box-shadow: 0 10px 40px rgba(255, 105, 180, 0.2);
-            text-align: center;
-        }
-
-        .contact-icons {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            margin-top: 2rem;
-            flex-wrap: wrap;
-        }
-
-        .contact-icon {
-            width: 70px;
-            height: 70px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
-            color: white;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
-        }
-
-        .contact-icon.email {
-            background: linear-gradient(135deg, #ff6b9d, #ff8fab);
-        }
-
-        .contact-icon.facebook {
-            background: linear-gradient(135deg, #4facfe, #00f2fe);
-        }
-
-        .contact-icon.phone {
-            background: linear-gradient(135deg, #43e97b, #38f9d7);
-        }
-
-        .contact-icon:hover {
-            transform: translateY(-5px) scale(1.1);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-        }
-
-        /* Footer */
-        footer {
-            background: rgba(255, 255, 255, 0.9);
-            padding: 2rem;
-            text-align: center;
-            color: #ff6b9d;
-            margin-top: 3rem;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            h1 {
-                font-size: 2rem;
-            }
-
-            .subtitle {
-                font-size: 1rem;
-            }
-
-            .section-title {
-                font-size: 1.8rem;
-            }
-
-            .section-title::before,
-            .section-title::after {
-                display: none;
-            }
-
-            nav ul {
-                gap: 1rem;
-            }
-
-            nav a {
-                font-size: 0.9rem;
-            }
-
-            .info-grid,
-            .hobbies-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .about-content,
-            .contact-container {
-                padding: 1.5rem;
-            }
-        }
-
-        /* Scroll Animation */
-        .fade-in {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.6s ease;
-        }
-
-        .fade-in.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    </style>
+    <title>Wiener Process Simulation - Expectation and Variance Calculator</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.11.0/math.min.js"></script>
 </head>
 <body>
-    <!-- Floating Hearts Background -->
-    <div class="floating-hearts">
-        <div class="heart" style="left: 10%; font-size: 20px; animation-duration: 12s;">💖</div>
-        <div class="heart" style="left: 30%; font-size: 25px; animation-duration: 15s; animation-delay: 2s;">🌸</div>
-        <div class="heart" style="left: 50%; font-size: 18px; animation-duration: 18s; animation-delay: 4s;">✨</div>
-        <div class="heart" style="left: 70%; font-size: 22px; animation-duration: 14s; animation-delay: 1s;">💕</div>
-        <div class="heart" style="left: 85%; font-size: 20px; animation-duration: 16s; animation-delay: 3s;">🌺</div>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <svg class="logo" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M5 25 Q 15 10, 25 25 T 45 25" stroke="#3498db" stroke-width="2" fill="none"/>
+                    <circle cx="25" cy="25" r="2" fill="#2980b9"/>
+                </svg>
+                <h1>Wiener Process Simulation</h1>
+                <p class="subtitle">Expectation and Variance Calculator</p>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Input Section -->
+            <section class="input-section card">
+                <h2>
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
+                    </svg>
+                    Tham số đầu vào
+                </h2>
+                
+                <div class="input-grid">
+                    <div class="input-group">
+                        <label for="time-horizon">
+                            Thời gian T (Time Horizon)
+                            <span class="tooltip">?
+                                <span class="tooltip-text">Khoảng thời gian mô phỏng (giây)</span>
+                            </span>
+                        </label>
+                        <input type="number" id="time-horizon" min="0.1" max="100" step="0.1" value="10">
+                        <span class="unit">giây</span>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="num-steps">
+                            Số bước N (Number of Steps)
+                            <span class="tooltip">?
+                                <span class="tooltip-text">Số điểm chia trong quá trình mô phỏng</span>
+                            </span>
+                        </label>
+                        <input type="number" id="num-steps" min="10" max="10000" step="10" value="1000">
+                        <span class="unit">bước</span>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button id="simulate-btn" class="btn btn-primary">
+                        <svg class="btn-icon" viewBox="0 0 24 24">
+                            <path d="M8 5v14l11-7z"/>
+                        </svg>
+                        Mô phỏng
+                    </button>
+                    <button id="reset-btn" class="btn btn-secondary">
+                        <svg class="btn-icon" viewBox="0 0 24 24">
+                            <path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/>
+                        </svg>
+                        Đặt lại
+                    </button>
+                </div>
+            </section>
+
+            <!-- Results Section -->
+            <section class="results-section card" id="results" style="display: none;">
+                <h2>
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <path d="M9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4zm2.5 2.1h-15V5h15v14.1zm0-16.1h-15c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h15c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/>
+                    </svg>
+                    Kết quả tính toán
+                </h2>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">Kỳ vọng lý thuyết</div>
+                        <div class="stat-value">E[W(t)] = <span id="expectation">0</span></div>
+                        <div class="stat-formula">E[W(t)] = 0 (∀t ≥ 0)</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-label">Phương sai lý thuyết</div>
+                        <div class="stat-value">Var[W(t)] = <span id="variance">-</span></div>
+                        <div class="stat-formula">Var[W(t)] = t</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-label">Giá trị mô phỏng tại T</div>
+                        <div class="stat-value">W(T) = <span id="final-value">-</span></div>
+                        <div class="stat-formula">Sample path value</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-label">Độ lệch chuẩn</div>
+                        <div class="stat-value">σ = <span id="std-dev">-</span></div>
+                        <div class="stat-formula">σ = √t</div>
+                    </div>
+                </div>
+
+                <!-- Multiple Paths Statistics -->
+                <div class="multi-path-stats" id="multi-stats" style="display: none;">
+                    <h3>Thống kê đa đường dẫn (Multiple Paths)</h3>
+                    <div class="stats-grid">
+                        <div class="stat-card-small">
+                            <div class="stat-label">Trung bình mẫu</div>
+                            <div class="stat-value-small"><span id="sample-mean">-</span></div>
+                        </div>
+                        <div class="stat-card-small">
+                            <div class="stat-label">Phương sai mẫu</div>
+                            <div class="stat-value-small"><span id="sample-variance">-</span></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Chart Section -->
+            <section class="chart-section card" id="chart-section" style="display: none;">
+                <h2>
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <path d="M3.5 18.49l6-6.01 4 4L22 6.92l-1.41-1.41-7.09 7.97-4-4L2 16.99z"/>
+                    </svg>
+                    Đồ thị Wiener Process
+                </h2>
+                
+                <div class="chart-controls">
+                    <button id="single-path-btn" class="chart-btn active">Đường đơn</button>
+                    <button id="multi-path-btn" class="chart-btn">Đa đường</button>
+                    <button id="distribution-btn" class="chart-btn">Phân phối</button>
+                </div>
+                
+                <div class="chart-container">
+                    <canvas id="wiener-chart"></canvas>
+                </div>
+                
+                <div class="chart-info">
+                    <p>📊 Đồ thị biểu diễn quá trình Wiener W(t) trong khoảng [0, T]</p>
+                    <p>📈 Chuyển động Brown chuẩn với W(0) = 0</p>
+                </div>
+            </section>
+
+            <!-- Theory Section -->
+            <section class="theory-section card">
+                <h2>
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                    Lý thuyết Wiener Process
+                </h2>
+                
+                <div class="theory-content">
+                    <div class="theory-item">
+                        <h3>Định nghĩa</h3>
+                        <p>Wiener process (Brownian motion) W(t) là quá trình ngẫu nhiên thỏa mãn:</p>
+                        <ul>
+                            <li>W(0) = 0</li>
+                            <li>W(t) có gia số độc lập và dừng</li>
+                            <li>W(t) - W(s) ~ N(0, t-s) với t > s ≥ 0</li>
+                            <li>Quỹ đạo liên tục</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="theory-item">
+                        <h3>Tính chất thống kê</h3>
+                        <div class="formula-box">
+                            <p>E[W(t)] = 0</p>
+                            <p>Var[W(t)] = t</p>
+                            <p>Cov[W(s), W(t)] = min(s, t)</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>© 2024 Wiener Process Simulator | Stochastic Calculus Tool</p>
+        </footer>
     </div>
 
-    <!-- Navigation -->
-    <nav>
-        <ul>
-            <li><a href="#home">🏠 Trang chủ</a></li>
-            <li><a href="#about">👋 Giới thiệu</a></li>
-            <li><a href="#hobbies">💝 Sở thích</a></li>
-            <li><a href="#gallery">📸 Thư viện</a></li>
-            <li><a href="#contact">📬 Liên hệ</a></li>
-        </ul>
-    </nav>
-
-    <!-- Hero Section -->
-    <section id="home" class="hero">
-        <div class="profile-container">
-            <div class="profile-img">
-                <span class="sparkle">✨</span>
-                <span class="sparkle">⭐</span>
-                <span class="sparkle">💫</span>
-                <span class="sparkle">🌟</span>
-            </div>
-        </div>
-        <h1>Lưu Thúy An Trinh</h1>
-        <p class="subtitle">✨ Giáo viên Toán - Lan tỏa niềm đam mê học tập ✨</p>
-    </section>
-
-    <!-- Personal Info Section -->
-    <section id="about" class="info-section">
-        <h2 class="section-title fade-in">Thông Tin Cá Nhân</h2>
-        
-        <div class="info-grid">
-            <div class="info-card fade-in">
-                <span class="info-icon">🎂</span>
-                <div class="info-label">Ngày sinh</div>
-                <div class="info-value">08/01/2002</div>
-            </div>
-
-            <div class="info-card fade-in">
-                <span class="info-icon">🏡</span>
-                <div class="info-label">Quê quán</div>
-                <div class="info-value">Đồng Tháp</div>
-            </div>
-
-            <div class="info-card fade-in">
-                <span class="info-icon">🏫</span>
-                <div class="info-label">Trường THPT</div>
-                <div class="info-value">THPT Tháp Mười</div>
-            </div>
-
-            <div class="info-card fade-in">
-                <span class="info-icon">🎓</span>
-                <div class="info-label">Bằng cấp</div>
-                <div class="info-value">Cử nhân Sư phạm Toán học<br>Đại học Cần Thơ</div>
-            </div>
-        </div>
-
-        <div class="about-content fade-in">
-            <h3 style="color: #ff6b9d; margin-bottom: 1rem; font-size: 1.5rem;">💖 Về tôi</h3>
-            <p>
-                Xin chào! Mình là <strong>An Trinh</strong>, một cô giáo Toán trẻ trung, năng động và luôn tràn đầy nhiệt huyết. 
-                Với mình, Toán học không chỉ là những con số khô khan mà là một thế giới đầy màu sắc, 
-                nơi logic và sáng tạo hòa quyện cùng nhau. 🌈
-            </p>
-            <p style="margin-top: 1rem;">
-                Xuất thân từ mảnh đất Đồng Tháp thân yêu, mình mang trong mình tình yêu với nghề giáo, 
-                mong muốn truyền cảm hứng học tập cho các em học sinh, giúp các em yêu thích môn Toán 
-                và khám phá vẻ đẹp của tri thức. 📚✨
-            </p>
-        </div>
-    </section>
-
-    <!-- Hobbies Section -->
-    <section id="hobbies" class="info-section">
-        <h2 class="section-title fade-in">Sở Thích Cá Nhân</h2>
-        
-        <div class="hobbies-grid">
-            <div class="hobby-card fade-in">
-                <div class="hobby-icon">📚</div>
-                <div class="hobby-name">Đọc sách</div>
-            </div>
-
-            <div class="hobby-card fade-in">
-                <div class="hobby-icon">🎵</div>
-                <div class="hobby-name">Nghe nhạc</div>
-            </div>
-
-            <div class="hobby-card fade-in">
-                <div class="hobby-icon">✈️</div>
-                <div class="hobby-name">Du lịch</div>
-            </div>
-
-            <div class="hobby-card fade-in">
-                <div class="hobby-icon">🎨</div>
-                <div class="hobby-name">Vẽ tranh</div>
-            </div>
-
-            <div class="hobby-card fade-in">
-                <div class="hobby-icon">🍳</div>
-                <div class="hobby-name">Nấu ăn</div>
-            </div>
-
-            <div class="hobby-card fade-in">
-                <div class="hobby-icon">📸</div>
-                <div class="hobby-name">Chụp ảnh</div>
-            </div>
-
-            <div class="hobby-card fade-in">
-                <div class="hobby-icon">🌸</div>
-                <div class="hobby-name">Trồng cây</div>
-            </div>
-
-            <div class="hobby-card fade-in">
-                <div class="hobby-icon">👗</div>
-                <div class="hobby-name">Thời trang</div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Gallery Section -->
-    <section id="gallery" class="info-section">
-        <h2 class="section-title fade-in">Thư Viện Khoảnh Khắc</h2>
-        
-        <div class="gallery-grid">
-            <div class="gallery-item fade-in">📷</div>
-            <div class="gallery-item fade-in">🌸</div>
-            <div class="gallery-item fade-in">🎓</div>
-            <div class="gallery-item fade-in">🌈</div>
-            <div class="gallery-item fade-in">💐</div>
-            <div class="gallery-item fade-in">🎀</div>
-        </div>
-    </section>
-
-    <!-- Contact Section -->
-    <section id="contact" class="info-section">
-        <h2 class="section-title fade-in">Liên Hệ Với Tôi</h2>
-        
-        <div class="contact-container fade-in">
-            <p style="font-size: 1.2rem; margin-bottom: 1rem;">
-                💌 Rất vui được kết nối với bạn!
-            </p>
-            <p style="color: #888;">
-                Nếu bạn muốn trao đổi về giảng dạy Toán, chia sẻ kinh nghiệm học tập,<br>
-                hoặc đơn giản chỉ là muốn kết bạn, hãy liên hệ với mình nhé! 🌟
-            </p>
-            
-            <div class="contact-icons">
-                <a href="mailto:antrinh@example.com" class="contact-icon email" title="Email">
-                    <i class="fas fa-envelope"></i>
-                </a>
-                <a href="https://facebook.com" target="_blank" class="contact-icon facebook" title="Facebook">
-                    <i class="fab fa-facebook-f"></i>
-                </a>
-                <a href="tel:0123456789" class="contact-icon phone" title="Điện thoại">
-                    <i class="fas fa-phone"></i>
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer>
-        <p>💖 Made with love by Lưu Thúy An Trinh 💖</p>
-        <p style="margin-top: 0.5rem; font-size: 0.9rem;">© 2024 - All rights reserved ✨</p>
-    </footer>
-
-    <script>
-        // Scroll Animation
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-
-        const observer = new IntersectionObserver(function(entries) {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                }
-            });
-        }, observerOptions);
-
-        document.querySelectorAll('.fade-in').forEach(element => {
-            observer.observe(element);
-        });
-
-        // Smooth Scroll
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-            });
-        });
-
-        // Interactive Hobby Cards
-        document.querySelectorAll('.hobby-card').forEach(card => {
-            card.addEventListener('click', function() {
-                this.style.background = `linear-gradient(135deg, 
-                    hsl(${Math.random() * 360}, 80%, 95%), 
-                    hsl(${Math.random() * 360}, 80%, 95%))`;
-            });
-        });
-
-        // Gallery Item Click Effect
-        document.querySelectorAll('.gallery-item').forEach(item => {
-            item.addEventListener('click', function() {
-                const emojis = ['🌸', '💖', '✨', '🌈', '🎀', '💕', '🌺', '⭐'];
-                this.textContent = emojis[Math.floor(Math.random() * emojis.length)];
-            });
-        });
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
