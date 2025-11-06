@@ -1,151 +1,33 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wiener Process Simulation – Expectation and Variance Calculator</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-            color: #333;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            overflow: hidden;
-        }
-
-        .header {
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-            color: white;
-            padding: 30px;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .header::before {
-            content: '∫';
-            position: absolute;
-            font-size: 200px;
-            opacity: 0.1;
-            top: -50px;
-            right: 50px;
-            font-style: italic;
-        }
-
-        .header h1 {
-            font-size: 28px;
-            margin-bottom: 10px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .header .subtitle {
-            font-size: 14px;
-            opacity: 0.9;
-            font-weight: 300;
-        }
-
-        .main-content {
-            display: grid;
-            grid-template-columns: 350px 1fr;
-            gap: 0;
-        }
-
-        .sidebar {
-            background: #f8f9fa;
-            padding: 30px;
-            border-right: 1px solid #e0e0e0;
-        }
-
-        .input-group {
-            margin-bottom: 25px;
-        }
-
-        .input-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #2a5298;
-            font-size: 14px;
-        }
-
-        .input-group input {
-            width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 16px;
-            transition: all 0.3s;
-        }
-
-        .input-group input:focus {
-            outline: none;
-            border-color: #2a5298;
-            box-shadow: 0 0 0 3px rgba(42, 82, 152, 0.1);
-        }
-
-        .input-info {
-            font-size: 12px;
-            color: #666;
-            margin-top: 5px;
-        }
-
-        .btn-simulate {
-            width: 100%;
-            padding: 15px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-            margin-bottom: 15px;
-        }
-
-        .btn-simulate:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
-        }
-
-        .btn-simulate:active {
-            transform: translateY(0);
-        }
-
-        .btn-simulate:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-
-        .btn-secondary {
-            width: 100%;
-            padding: 12px;
-            background: white;
-            color: #2a5298;
-            border: 2px solid #2a5298;
-            border-radius: 10px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .btn-secondary:hover {
-            background: #2a5298;
-            
++--------------------------------------------------------------------------------------+
+|  WIENER PROCESS SIMULATION                                                           |
+|  A Visualizer for Stochastic Calculus & Brownian Motion                              |
++--------------------------------------------------------------------------------------+
+|                                                                                      |
+|  +---------------------------------+  +--------------------------------------------+ |
+|  | KHUNG ĐIỀU KHIỂN (CONTROLS)     |  | KHUNG ĐỒ THỊ (CHART AREA)                    | |
+|  |                                 |  |                                            | |
+|  |  ▶ Tham số mô phỏng             |  |   ^ W(t)                                   | |
+|  |  Thời gian kết thúc (T) [ 1  ]  |  |   |                ..---.                  | |
+|  |  Số bước (N)          [ 500]  |  |   |          .---.  /      \                 | |
+|  |  Số quỹ đạo (M)       [ 3  ]  |  |   |         /     `'        `-.              | |
+|  |                                 |  |  0+-------|-----------------|------------> t | |
+|  |  [      MÔ PHỎNG (SIMULATE)    ]  |  |   |      /`.../                          | |
+|  |                                 |  |   |     /                                | |
+|  |  ▶ Tùy chọn hiển thị            |  |   |    '                                 | |
+|  |  [x] Hiển thị nhiều quỹ đạo     |  |   |                                      | |
+|  |  [ ] Hiển thị trung bình E[W(t)]|  |   | E[W(t)]=0, Var[W(t)]=t                | |
+|  |  [ ] Hiển thị độ lệch chuẩn ±√t |  |                                            | |
+|  +---------------------------------+  +--------------------------------------------+ |
+|                                                                                      |
+|  +----------------------------------------------------------------------------------+ |
+|  | KHUNG THÔNG TIN (INFORMATION PANEL)                                              | |
+|  |                                                                                  | |
+|  |  Định nghĩa Chuyển động Wiener (W(t)):                                           | |
+|  |  • W(0) = 0                                                                     | |
+|  |  • Các số gia độc lập: W(t+u) - W(t) độc lập với sigma-field F(s) với mọi s ≤ t.  | |
+|  |  • W(t) - W(s) ~ N(0, t-s) cho t > s.                                             | |
+|  |  • Các quỹ đạo là liên tục theo thời gian.                                       | |
+|  |                                                                                  | |
+|  +----------------------------------------------------------------------------------+ |
+|                                                                                      |
++--------------------------------------------------------------------------------------+
