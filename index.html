@@ -3,191 +3,149 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wiener Process Simulation - Expectation and Variance Calculator</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.11.0/math.min.js"></script>
-</head>
-<body>
-    <div class="container">
-        <!-- Header -->
-        <header class="header">
-            <div class="header-content">
-                <svg class="logo" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M5 25 Q 15 10, 25 25 T 45 25" stroke="#3498db" stroke-width="2" fill="none"/>
-                    <circle cx="25" cy="25" r="2" fill="#2980b9"/>
-                </svg>
-                <h1>Wiener Process Simulation</h1>
-                <p class="subtitle">Expectation and Variance Calculator</p>
-            </div>
-        </header>
+    <title>Wiener Process Simulation – Expectation and Variance Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-        <!-- Main Content -->
-        <main class="main-content">
-            <!-- Input Section -->
-            <section class="input-section card">
-                <h2>
-                    <svg class="icon" viewBox="0 0 24 24">
-                        <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
-                    </svg>
-                    Tham số đầu vào
-                </h2>
-                
-                <div class="input-grid">
-                    <div class="input-group">
-                        <label for="time-horizon">
-                            Thời gian T (Time Horizon)
-                            <span class="tooltip">?
-                                <span class="tooltip-text">Khoảng thời gian mô phỏng (giây)</span>
-                            </span>
-                        </label>
-                        <input type="number" id="time-horizon" min="0.1" max="100" step="0.1" value="10">
-                        <span class="unit">giây</span>
-                    </div>
-                    
-                    <div class="input-group">
-                        <label for="num-steps">
-                            Số bước N (Number of Steps)
-                            <span class="tooltip">?
-                                <span class="tooltip-text">Số điểm chia trong quá trình mô phỏng</span>
-                            </span>
-                        </label>
-                        <input type="number" id="num-steps" min="10" max="10000" step="10" value="1000">
-                        <span class="unit">bước</span>
-                    </div>
-                </div>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
 
-                <div class="button-group">
-                    <button id="simulate-btn" class="btn btn-primary">
-                        <svg class="btn-icon" viewBox="0 0 24 24">
-                            <path d="M8 5v14l11-7z"/>
-                        </svg>
-                        Mô phỏng
-                    </button>
-                    <button id="reset-btn" class="btn btn-secondary">
-                        <svg class="btn-icon" viewBox="0 0 24 24">
-                            <path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/>
-                        </svg>
-                        Đặt lại
-                    </button>
-                </div>
-            </section>
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
 
-            <!-- Results Section -->
-            <section class="results-section card" id="results" style="display: none;">
-                <h2>
-                    <svg class="icon" viewBox="0 0 24 24">
-                        <path d="M9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4zm2.5 2.1h-15V5h15v14.1zm0-16.1h-15c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h15c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/>
-                    </svg>
-                    Kết quả tính toán
-                </h2>
-                
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-label">Kỳ vọng lý thuyết</div>
-                        <div class="stat-value">E[W(t)] = <span id="expectation">0</span></div>
-                        <div class="stat-formula">E[W(t)] = 0 (∀t ≥ 0)</div>
-                    </div>
-                    
-                    <div class="stat-card">
-                        <div class="stat-label">Phương sai lý thuyết</div>
-                        <div class="stat-value">Var[W(t)] = <span id="variance">-</span></div>
-                        <div class="stat-formula">Var[W(t)] = t</div>
-                    </div>
-                    
-                    <div class="stat-card">
-                        <div class="stat-label">Giá trị mô phỏng tại T</div>
-                        <div class="stat-value">W(T) = <span id="final-value">-</span></div>
-                        <div class="stat-formula">Sample path value</div>
-                    </div>
-                    
-                    <div class="stat-card">
-                        <div class="stat-label">Độ lệch chuẩn</div>
-                        <div class="stat-value">σ = <span id="std-dev">-</span></div>
-                        <div class="stat-formula">σ = √t</div>
-                    </div>
-                </div>
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
 
-                <!-- Multiple Paths Statistics -->
-                <div class="multi-path-stats" id="multi-stats" style="display: none;">
-                    <h3>Thống kê đa đường dẫn (Multiple Paths)</h3>
-                    <div class="stats-grid">
-                        <div class="stat-card-small">
-                            <div class="stat-label">Trung bình mẫu</div>
-                            <div class="stat-value-small"><span id="sample-mean">-</span></div>
-                        </div>
-                        <div class="stat-card-small">
-                            <div class="stat-label">Phương sai mẫu</div>
-                            <div class="stat-value-small"><span id="sample-variance">-</span></div>
-                        </div>
-                    </div>
-                </div>
-            </section>
+        .header::before {
+            content: '∫';
+            position: absolute;
+            font-size: 200px;
+            opacity: 0.1;
+            top: -50px;
+            right: 50px;
+            font-style: italic;
+        }
 
-            <!-- Chart Section -->
-            <section class="chart-section card" id="chart-section" style="display: none;">
-                <h2>
-                    <svg class="icon" viewBox="0 0 24 24">
-                        <path d="M3.5 18.49l6-6.01 4 4L22 6.92l-1.41-1.41-7.09 7.97-4-4L2 16.99z"/>
-                    </svg>
-                    Đồ thị Wiener Process
-                </h2>
-                
-                <div class="chart-controls">
-                    <button id="single-path-btn" class="chart-btn active">Đường đơn</button>
-                    <button id="multi-path-btn" class="chart-btn">Đa đường</button>
-                    <button id="distribution-btn" class="chart-btn">Phân phối</button>
-                </div>
-                
-                <div class="chart-container">
-                    <canvas id="wiener-chart"></canvas>
-                </div>
-                
-                <div class="chart-info">
-                    <p>📊 Đồ thị biểu diễn quá trình Wiener W(t) trong khoảng [0, T]</p>
-                    <p>📈 Chuyển động Brown chuẩn với W(0) = 0</p>
-                </div>
-            </section>
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+        }
 
-            <!-- Theory Section -->
-            <section class="theory-section card">
-                <h2>
-                    <svg class="icon" viewBox="0 0 24 24">
-                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                    </svg>
-                    Lý thuyết Wiener Process
-                </h2>
-                
-                <div class="theory-content">
-                    <div class="theory-item">
-                        <h3>Định nghĩa</h3>
-                        <p>Wiener process (Brownian motion) W(t) là quá trình ngẫu nhiên thỏa mãn:</p>
-                        <ul>
-                            <li>W(0) = 0</li>
-                            <li>W(t) có gia số độc lập và dừng</li>
-                            <li>W(t) - W(s) ~ N(0, t-s) với t > s ≥ 0</li>
-                            <li>Quỹ đạo liên tục</li>
-                        </ul>
-                    </div>
-                    
-                    <div class="theory-item">
-                        <h3>Tính chất thống kê</h3>
-                        <div class="formula-box">
-                            <p>E[W(t)] = 0</p>
-                            <p>Var[W(t)] = t</p>
-                            <p>Cov[W(s), W(t)] = min(s, t)</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </main>
+        .header .subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+            font-weight: 300;
+        }
 
-        <!-- Footer -->
-        <footer class="footer">
-            <p>© 2024 Wiener Process Simulator | Stochastic Calculus Tool</p>
-        </footer>
-    </div>
+        .main-content {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 0;
+        }
 
-    <script src="script.js"></script>
-</body>
-</html>
+        .sidebar {
+            background: #f8f9fa;
+            padding: 30px;
+            border-right: 1px solid #e0e0e0;
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2a5298;
+            font-size: 14px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #2a5298;
+            box-shadow: 0 0 0 3px rgba(42, 82, 152, 0.1);
+        }
+
+        .input-info {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .btn-simulate {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-bottom: 15px;
+        }
+
+        .btn-simulate:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-simulate:active {
+            transform: translateY(0);
+        }
+
+        .btn-simulate:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            width: 100%;
+            padding: 12px;
+            background: white;
+            color: #2a5298;
+            border: 2px solid #2a5298;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-secondary:hover {
+            background: #2a5298;
+            
