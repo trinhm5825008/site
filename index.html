@@ -1,33 +1,142 @@
-+--------------------------------------------------------------------------------------+
-|  WIENER PROCESS SIMULATION                                                           |
-|  A Visualizer for Stochastic Calculus & Brownian Motion                              |
-+--------------------------------------------------------------------------------------+
-|                                                                                      |
-|  +---------------------------------+  +--------------------------------------------+ |
-|  | KHUNG ĐIỀU KHIỂN (CONTROLS)     |  | KHUNG ĐỒ THỊ (CHART AREA)                    | |
-|  |                                 |  |                                            | |
-|  |  ▶ Tham số mô phỏng             |  |   ^ W(t)                                   | |
-|  |  Thời gian kết thúc (T) [ 1  ]  |  |   |                ..---.                  | |
-|  |  Số bước (N)          [ 500]  |  |   |          .---.  /      \                 | |
-|  |  Số quỹ đạo (M)       [ 3  ]  |  |   |         /     `'        `-.              | |
-|  |                                 |  |  0+-------|-----------------|------------> t | |
-|  |  [      MÔ PHỎNG (SIMULATE)    ]  |  |   |      /`.../                          | |
-|  |                                 |  |   |     /                                | |
-|  |  ▶ Tùy chọn hiển thị            |  |   |    '                                 | |
-|  |  [x] Hiển thị nhiều quỹ đạo     |  |   |                                      | |
-|  |  [ ] Hiển thị trung bình E[W(t)]|  |   | E[W(t)]=0, Var[W(t)]=t                | |
-|  |  [ ] Hiển thị độ lệch chuẩn ±√t |  |                                            | |
-|  +---------------------------------+  +--------------------------------------------+ |
-|                                                                                      |
-|  +----------------------------------------------------------------------------------+ |
-|  | KHUNG THÔNG TIN (INFORMATION PANEL)                                              | |
-|  |                                                                                  | |
-|  |  Định nghĩa Chuyển động Wiener (W(t)):                                           | |
-|  |  • W(0) = 0                                                                     | |
-|  |  • Các số gia độc lập: W(t+u) - W(t) độc lập với sigma-field F(s) với mọi s ≤ t.  | |
-|  |  • W(t) - W(s) ~ N(0, t-s) cho t > s.                                             | |
-|  |  • Các quỹ đạo là liên tục theo thời gian.                                       | |
-|  |                                                                                  | |
-|  +----------------------------------------------------------------------------------+ |
-|                                                                                      |
-+--------------------------------------------------------------------------------------+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wiener Process Simulation</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1 class="title">
+                <span class="math-symbol">W(t)</span>
+                Wiener Process Simulation
+            </h1>
+            <p class="subtitle">Stochastic Process Visualization Tool</p>
+        </header>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Control Panel -->
+            <div class="control-panel">
+                <h3 class="panel-title">
+                    <svg class="icon" viewBox="0 0 24 24" width="20" height="20">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                    </svg>
+                    Tham số mô phỏng
+                </h3>
+                
+                <div class="input-group">
+                    <label for="time-end">
+                        Thời gian kết thúc (T)
+                        <span class="tooltip" data-tooltip="Thời điểm cuối cùng của quá trình">?</span>
+                    </label>
+                    <input type="number" id="time-end" value="10" min="1" max="100" step="0.5">
+                </div>
+
+                <div class="input-group">
+                    <label for="num-steps">
+                        Số bước chia (N)
+                        <span class="tooltip" data-tooltip="Số điểm rời rạc hóa thời gian">?</span>
+                    </label>
+                    <input type="number" id="num-steps" value="1000" min="100" max="10000" step="100">
+                </div>
+
+                <div class="input-group">
+                    <label for="num-paths">
+                        Số đường mô phỏng (M)
+                        <span class="tooltip" data-tooltip="Số quỹ đạo Wiener độc lập">?</span>
+                    </label>
+                    <input type="number" id="num-paths" value="3" min="1" max="10">
+                </div>
+
+                <div class="options">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="show-mean">
+                        <span>Hiển thị E[W(t)] = 0</span>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="show-variance">
+                        <span>Hiển thị ±√Var[W(t)]</span>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="animate">
+                        <span>Animation</span>
+                    </label>
+                </div>
+
+                <button id="simulate-btn" class="simulate-btn">
+                    <svg class="btn-icon" viewBox="0 0 24 24" width="18" height="18">
+                        <path d="M8 5v14l11-7z"/>
+                    </svg>
+                    Mô phỏng
+                </button>
+
+                <button id="reset-btn" class="reset-btn">
+                    <svg class="btn-icon" viewBox="0 0 24 24" width="18" height="18">
+                        <path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/>
+                    </svg>
+                    Reset
+                </button>
+            </div>
+
+            <!-- Chart Area -->
+            <div class="chart-container">
+                <canvas id="wiener-chart"></canvas>
+                <div class="loading-overlay" id="loading">
+                    <div class="spinner"></div>
+                    <p>Đang mô phỏng...</p>
+                </div>
+            </div>
+
+            <!-- Statistics Panel -->
+            <div class="stats-panel">
+                <h3 class="panel-title">
+                    <svg class="icon" viewBox="0 0 24 24" width="20" height="20">
+                        <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
+                    </svg>
+                    Thông tin thống kê
+                </h3>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <span class="stat-label">Kỳ vọng:</span>
+                        <span class="stat-value">E[W(t)] = 0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Phương sai:</span>
+                        <span class="stat-value">Var[W(t)] = t</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Phân phối:</span>
+                        <span class="stat-value">W(t) ~ N(0, t)</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Tính chất:</span>
+                        <span class="stat-value">Independent increments</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Theory Section -->
+        <div class="theory-section">
+            <h3>Lý thuyết cơ bản</h3>
+            <div class="theory-content">
+                <p><strong>Chuyển động Wiener (Brownian Motion)</strong> là một quá trình ngẫu nhiên liên tục W(t) thỏa mãn:</p>
+                <ul>
+                    <li>W(0) = 0 (khởi đầu từ gốc)</li>
+                    <li>W(t) - W(s) ~ N(0, t-s) với t > s (gia số Gaussian)</li>
+                    <li>Các gia số độc lập: W(t₄) - W(t₃) độc lập với W(t₂) - W(t₁) khi [t₁,t₂] ∩ [t₃,t₄] = ∅</li>
+                    <li>Quỹ đạo liên tục (continuous paths)</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
